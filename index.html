@@ -25,7 +25,8 @@
       const nodeAvatar = document.getElementById('avatar');
       head = new TalkingHead( nodeAvatar, {
         // ttsEndpoint: "https://eu-texttospeech.googleapis.com/v1beta1/text:synthesize",
-        ttsEndpoint: "/.netlify/functions/tts-proxy",
+        // ttsEndpoint: "/.netlify/functions/tts-proxy",
+        ttsEndpoint: "https://homeassistant-sb.duckdns.org:7776/proxy-tts",
         lipsyncModules: ["en", "fi"],
         cameraView: "head"
       });
@@ -137,6 +138,9 @@
 
           return next(action);
         });
+
+        const res = await fetch('https://homeassistant-sb.duckdns.org:7776/get-token');
+        const json = await res.json();
 
         window.WebChat.renderWebChat({
             directLine: window.WebChat.createDirectLine({
