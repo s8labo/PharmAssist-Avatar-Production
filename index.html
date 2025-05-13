@@ -26,9 +26,9 @@
       head = new TalkingHead( nodeAvatar, {
         // ttsEndpoint: "https://eu-texttospeech.googleapis.com/v1beta1/text:synthesize",
         // ttsEndpoint: "/.netlify/functions/tts-proxy",
-        // ttsEndpoint: "https://homeassistant-sb.duckdns.org:7776/proxy-tts",
+        ttsEndpoint: "https://homeassistant-sb.duckdns.org:7776/proxy-tts",
         // ttsEndpoint: "https://pharmassist-avatar-production.onrender.com/proxy-tts",
-        ttsEndpoint: "https://pharmassist-avatar-production.onrender.com:443/proxy-tts",
+        // ttsEndpoint: "https://pharmassist-avatar-production.onrender.com/proxy-tts",
         lipsyncModules: ["en", "fi"],
         cameraView: "head"
       });
@@ -141,8 +141,8 @@
           return next(action);
         });
 
-        const res = await fetch('https://pharmassist-avatar-production.onrender.com:443/get-token');
         // const res = await fetch('https://pharmassist-avatar-production.onrender.com/get-token');
+        const res = await fetch('https://homeassistant-sb.duckdns.org:7776/get-token');
         const json = await res.json();
 
         window.WebChat.renderWebChat({
