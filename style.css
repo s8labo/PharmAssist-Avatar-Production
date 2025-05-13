@@ -1,0 +1,340 @@
+body, html {
+    font-family: Calibri, sans-serif;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center; /* Align items to the left and right */
+}
+
+.header {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+    background-color: aliceblue;
+    border-radius: 15px;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 40px;
+    margin-right: 10px;
+    background-color: aliceblue;
+    border-radius: 15px;
+    font-size: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#webchat {
+    height: 70%; /* Adjust the percentage as needed */
+    width: 100%;
+    font-size: 20px;
+}
+.webchat__render-markdown--adaptive-cards p {
+    font-size: 16px;
+}
+
+#webchat .webchat__bubble__content, .webchat__suggested-action {
+    border-radius: 10px!important;
+}
+
+#webchat .ac-pushButton {
+    border-radius: 7px!important;
+}
+
+input {
+  font-size: 18px !important; /* Apply your desired font size */
+  border-radius: 7px;
+}
+
+
+#avatar {
+    display: block;
+    width: 100%;
+    height: 30%; /* Fixed height, adjust as needed */
+    margin-bottom: 0px;
+/*    object-fit: contain; */
+}
+
+
+#center-panel {
+    width: 50%;
+    height: 100%;
+/*    display: flex;*/
+    flex-direction: column;
+    background-color: white; /* Chat background */
+    color: black; /* Chat text color */
+    border-radius: 15px;
+    padding: 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: hidden; 
+    border: 1px solid #ccc;
+
+}
+
+#loading {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+    color: grey;
+}
+
+
+#loading::after {
+  content: "⏳"; /* Spinner icon or other loading animation */
+  font-size: 24px;
+  animation: spin 1s infinite linear;
+}
+
+
+#left-panel {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow-y: auto; 
+    overflow-x: auto; 
+}
+
+
+#right-panel {
+    width: 40%;
+    height: 100%;
+/*    display: flex;*/
+    flex-direction: column;
+    background-color: white; /* Chat background */
+    color: black; /* Chat text color */
+    border-radius: 15px;
+    padding: 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-left: auto; /* Ensure it is on the right side */
+    overflow-y: hidden; 
+    border: 1px solid #ccc;
+
+}
+
+table {
+/*      width: 100%;*/
+     /* border-collapse: collapse;
+    display: block;*/
+/*    overflow-x: auto;*/
+/*    white-space: nowrap;*/
+}
+/*th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  padding-bottom: 25px;
+  font-size: 18px;
+  min-width: 200px;
+  word-wrap: break-word;
+}
+th {
+  background-color: #f4f4f4;
+}*/
+
+table {
+  border: 1px solid #aaa;
+  border-collapse: separate;
+  overflow: hidden;
+  border-spacing: 0;
+  border-radius: 10px;
+  text-align: left;
+  border: 1px solid #aaa;
+
+  th, td {
+    padding: 8px;
+    vertical-align: middle;
+    border-right: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    font-size: 18px;
+    min-width: 200px;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  th {
+    background: aliceblue;
+  }
+
+  td {
+    background: #fff;
+  }
+
+  thead {
+    th {}
+  }
+
+  tbody {
+    tr {
+      &:last-child {
+        th, td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
+/* Wrapper for arrows and scrollable content */
+.scroll-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Scrollable container */
+.scroll-container {
+    max-width: 100%; /* Ensures the content fits the screen */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    flex-grow: 1; /* Ensures the container expands to fill space */
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+}
+
+/* Table styling */
+.scroll-container table {
+    width: 150%; /* Wider than container to enable scrolling */
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.scroll-container th, .scroll-container td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+    padding-bottom: 25px;
+}
+
+/* Arrows */
+.scroll-arrow {
+    cursor: pointer; /* Makes it clear the arrows are clickable */
+    font-size: 24px; /* Large, clear size for visibility */
+    color: #f4f4f4; /* Bright color for visibility */
+    user-select: none; /* Prevents text selection */
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.6); /* Slightly visible background */
+    border-radius: 50%; /* Circular design */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for 3D effect */
+    z-index: 10; /* Ensures it stays on top of content */
+}
+
+.scroll-arrow.left-arrow {
+    position: absolute;
+    left: 10px;
+}
+
+.scroll-arrow.right-arrow {
+    position: absolute;
+    right: 10px;
+}
+
+/* Hide arrows by default (JavaScript will toggle visibility) */
+.scroll-arrow.hidden {
+    display: none;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/*.webchat__upload-button {
+    width: 75px!important;
+}
+
+.webchat__webcam-button {
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #ccc;
+    padding-left: 9px;
+    padding-rigt: 7px;
+    border-right: 1px solid #ccc;
+    padding-right: 9px;
+}*/
+
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: aliceblue;
+    padding: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.collapsible-header .toggle-arrow {
+  transition: transform 0.3s ease;
+}
+
+.collapsible-header.collapsed .toggle-arrow {
+  transform: rotate(-180deg);
+}
+
+.collapsible-content {
+  display: none; /* Initially collapsed */
+  overflow: hidden;
+}
+
+.collapsible-content.open {
+  display: block; /* Expanded state */
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+@media (max-width: 768px) {
+    #center-panel {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .header, #container {
+        width: 100%;
+        font-size: 16px;
+        margin-right: 0;
+    }
+
+    input {
+        font-size: 16px !important;
+    }
+
+    #webchat {
+        font-size: 18px;
+        height: 60%;
+        width: 100%;
+    }
+
+    body, html {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #avatar {
+        max-height: 150px;
+    }
+}
+
