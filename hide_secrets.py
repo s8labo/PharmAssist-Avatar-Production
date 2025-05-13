@@ -53,9 +53,5 @@ def proxy_tts():
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
-        port=7776,
-        ssl_context=(
-            "/home/pchristm/dehydrated/certs/homeassistant-sb.duckdns.org/cert.pem",
-            "/home/pchristm/dehydrated/certs/homeassistant-sb.duckdns.org/privkey.pem",
-        )
+        port=443
     )
