@@ -25,7 +25,7 @@
       const nodeAvatar = document.getElementById('avatar');
       head = new TalkingHead( nodeAvatar, {
         // ttsEndpoint: "https://eu-texttospeech.googleapis.com/v1beta1/text:synthesize",
-        ttsEndpoint: "/.netlify/functions/tts-proxy",
+        ttsApiKey: "/.netlify/functions/tts-proxy",
         lipsyncModules: ["en", "fi"],
         cameraView: "head"
       });
