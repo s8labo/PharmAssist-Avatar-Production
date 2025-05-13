@@ -1,5 +1,3 @@
-// functions/tts-proxy.js
-
 import fetch from 'node-fetch';
 
 export const handler = async (event) => {
@@ -12,18 +10,17 @@ export const handler = async (event) => {
 
   try {
     const requestBody = JSON.parse(event.body);
+    const apiKey = process.env.GOOGLE_TTS_API_KEY;
 
-    const response = await fetch('https://eu-texttospeech.googleapis.com/v1beta1/text:synthesize', {
+    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GOOGLE_TTS_API_KEY}`,
       },
       body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
-
     return {
       statusCode: 200,
       body: JSON.stringify(data),
