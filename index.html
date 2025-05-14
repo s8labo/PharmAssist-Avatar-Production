@@ -22,6 +22,7 @@
 
     document.addEventListener('DOMContentLoaded', async function(e) {
 
+      // TTS API call
       const nodeAvatar = document.getElementById('avatar');
       head = new TalkingHead( nodeAvatar, {
         // ttsEndpoint: "https://eu-texttospeech.googleapis.com/v1beta1/text:synthesize",
@@ -74,35 +75,6 @@
     });
 
     (async function() {
-        // const fetchSpeechServicesCredentials = {
-        //   credentials: {
-        //         region: 'germanywestcentral',
-        //         subscriptionKey: '724b12cefed2442c9df696992b249f89'
-        //     }
-        // }
-
-        // async function createHybridPonyfillFactory({ credentials }) {
-        //   const speechServicesPonyfillFactory = await window.WebChat.createCognitiveServicesSpeechServicesPonyfillFactory(
-        //     {
-        //       credentials
-        //     }
-        //   );
-
-        //   const webSpeechPonyfillFactory = await window.WebChat.createBrowserWebSpeechPonyfillFactory();
-
-        //   return options => {
-        //     const speechServicesPonyfill = speechServicesPonyfillFactory(options);
-        //     const webSpeechPonyfill = webSpeechPonyfillFactory(options);
-
-        //     return {
-        //       SpeechGrammarList: webSpeechPonyfill.SpeechGrammarList,
-        //       SpeechRecognition: webSpeechPonyfill.SpeechRecognition,
-
-        //       speechSynthesis: speechServicesPonyfill.speechSynthesis,
-        //       SpeechSynthesisUtterance: speechServicesPonyfill.SpeechSynthesisUtterance
-        //     };
-        //   };
-        // }
 
         const styleSet = window.WebChat.createStyleSet({
             rootHeight: '100%',
@@ -110,30 +82,22 @@
             backgroundColor: 'aliceblue'
         });
 
-        // const avatarOptions = {
-        //     botAvatarInitials: 'PA',
-        //     userAvatarInitials: 'U'
+        // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        // const sendMessageWithDelay = async (message) => {
+        //     directLine.postActivity({ type: 'message', text: message });
+
+        //     await delay(5000);
+
+        //     const activities = await directLine.getActivity();
+        //     activities.forEach(activity => displayActivity(activity));
         // };
-        // Function to simulate delay
-        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        const sendMessageWithDelay = async (message) => {
-            directLine.postActivity({ type: 'message', text: message });
-
-            // Introduce a delay of 3 seconds before displaying the bot's response
-            await delay(5000);
-
-            // Fetch the activities from the conversation and display them
-            const activities = await directLine.getActivity();
-            activities.forEach(activity => displayActivity(activity));
-        };
-
-        // Create a Redux store with middleware to capture incoming activities
+        // Directline API key call
         const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
           if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
             const event = new Event('webchatincomingactivity');
 
-            // Attach the bot's activity (message) to the custom event
             event.data = action.payload.activity;
             window.dispatchEvent(event);
           }
@@ -169,16 +133,14 @@
             // const messageID = data;
             // console.log(`Bot says: ${JSON.stringify(messageID, null, 2)}`);
 
-            // Make the avatar speak the bot message using TTS
             if (typeof head !== 'undefined' && head.speakText) {
-              head.speakText(botMessage); // Avatar speaks the bot's message
+              head.speakText(botMessage); 
             } else {
               console.error('Avatar head is not initialized.');
             }
           }
         });
 
-        // Focus on Web Chat for better user experience
         document.querySelector('#webchat > *').focus();
       })().catch(err => console.error(err));
 
@@ -186,229 +148,7 @@
         console.log(`all data: ${JSON.stringify(data)}`);
       });
 
-
-    let counter = 1;
-    let counter2 = 1;
-
-    window.addEventListener('webchatincomingactivity', ({ data }) => {
-      if (data.type === 'message' && data.from.role === 'user' && data.value && !data.value.date) {
-        const { value } = data;
-
-        if (value.kontakt){
-          populateTransposedTable('#userMasterData', {
-            Name: value.name,
-            Gender: value.geschlecht,
-            Birthdate: value.geburtsdatum,
-            Height: value.groesse,
-            Weight: value.gewicht,
-            Contact: value.kontakt,
-          });
-
-          openCollapsible("#userMasterDataContainer");
-        }
-
-        if (value.support){
-          let healthFields = [
-            { key: "grund", label: "Reason" },
-            { key: "problem", label: "Concerns" },
-            { key: "allergies", label: "Allergies" },
-            { key: "conditions", label: "Conditions" },
-            { key: "renal", label: "Renal or Hepatic Insufficiency" },
-            { key: "doctors", label: "Multiple Doctors" },
-            { key: "mediplan", label: "Medication Plan" },
-            { key: "info", label: "Sufficiently Informed" },
-            { key: "support", label: "Support" }
-          ];
-
-          healthFields.forEach(field => {
-            const valueKey = field.key;
-            if (!value[valueKey]) return;
-
-            const healthData = {
-              [field.label]: value[valueKey] || "-"
-            };
-
-            populateHealthTable('#userHealthData', healthData);
-          });
-
-          openCollapsible("#userHealthDataContainer");
-          closeOtherCollapsibles("#userHealthDataContainer");
-
-        }
-
-        // Populate Prescribed Medication Data
-        // let counter = 1;
-        while (true) {
-          const nameKey = `medikament_name${counter}`;
-          if (!value[nameKey]) break;
-
-          const medicationData = {
-            "Medication Number": counter,
-            "Medication Name": value[nameKey],
-            "Strength": value[`medikament_strength${counter}`] || '-',
-            "Time & Dose": value[`medikament_dosis${counter}`] || '-',
-            "Intake with Meal": value[`medikament_einnahme${counter}`] || '-',
-            "Intake with Drinks or Food": value[`medikament_getraenke${counter}`] || '-',
-            "Intake time": value[`medikament_zeit${counter}`] || '-',
-            "Indication": value[`medikament_indikation${counter}`] || '-',
-            "Taken as Prescribed": value[`medikament_verordnung${counter}`] || '-',
-            "Forgotten Dose": value[`medikament_vergessen${counter}`] || '-',
-            "Effectiveness": value[`medikament_effektiv${counter}`] || '-',
-            "Comments": value[`medikament_probleme${counter}`] || '-',
-            "Storage": value[`medikament_lagerung${counter}`] || '-',
-          };
-          populateMedicationTable('#userMedicationData', medicationData);
-          openCollapsible("#userMedicationDataContainer");
-          closeOtherCollapsibles("#userMedicationDataContainer");
-          
-          counter++;
-        }
-
-        // Populate OTC Medication Data
-        // let counter2 = 1;
-        while (true) {
-          const otcnameKey = `otcmedikament_name${counter2}`;
-          if (!value[otcnameKey]) break;
-
-          const otcMedicationData = {
-            "Medication Number": counter2,
-            "Medication Name": value[otcnameKey],
-            "Strength": value[`otcmedikament_staerke${counter2}`] || '-',
-            "Time & Dose": value[`otcmedikament_dosis${counter2}`] || '-',
-            "Intake with Meal": value[`otcmedikament_einnahme${counter2}`] || '-',
-            "Intake with Drinks or Food": value[`otcmedikament_getraenke${counter2}`] || '-',
-            "Intake Time": value[`otcmedikament_zeit${counter2}`] || '-',
-            "Indication": value[`otcmedikament_indikation${counter2}`] || '-',
-            "Effectiveness": value[`otcmedikament_effektiv${counter2}`] || '-',
-            "Comments": value[`otcmedikament_probleme${counter2}`] || '-',
-            "Storage": value[`otcmedikament_lagerung${counter2}`] || '-',
-            "Recommendation": value[`otcmedikament_empfehlung${counter2}`] || '-',
-          };
-          populateMedicationTable('#userOtcMedicationData', otcMedicationData);
-          openCollapsible("#userOtcMedicationDataContainer");
-          closeOtherCollapsibles("#userOtcMedicationDataContainer");
-          counter2++;
-        }
-      }
-    });
-
-
-    // Helper Function to Populate Transposed Table
-    function populateTransposedTable(selector, data, allowDynamicRows = false) {
-      const table = document.querySelector(selector);
-      const rows = table.querySelectorAll('tr');
-
-      Object.entries(data).forEach(([key, value]) => {
-        let matchingRow = Array.from(rows).find((row) => row.querySelector('th')?.textContent === key);
-
-        if (!matchingRow && allowDynamicRows) {
-          // Create a new row dynamically if not found
-          matchingRow = document.createElement('tr');
-          const headerCell = document.createElement('th');
-          headerCell.textContent = key;
-          const valueCell = document.createElement('td');
-          valueCell.textContent = value || '-';
-
-          matchingRow.appendChild(headerCell);
-          matchingRow.appendChild(valueCell);
-          table.querySelector('tbody').appendChild(matchingRow);
-        } else if (matchingRow) {
-          // Check if the row is already populated
-          const valueCell = matchingRow.querySelector('td');
-          if (!valueCell.textContent || valueCell.textContent === '-') {
-            valueCell.textContent = value || '-'; // Only populate if empty
-          }
-        }
-      });
-    }
-
-    function populateHealthTable(selector, data) {
-      const table = document.querySelector(selector);
-      const rows = table.querySelectorAll('tbody tr');
-
-      Object.entries(data).forEach(([label, value]) => {
-        let rowFound = false;
-
-        rows.forEach(row => {
-          const th = row.querySelector('th');
-          const td = row.querySelector('td');
-
-          if (th && th.textContent.trim() === label) {
-            // Update existing row's <td> if it's empty or needs updating
-            if (td && (td.textContent.trim() === "" || td.textContent.trim() === "-")) {
-              td.textContent = value;
-            }
-            rowFound = true;
-          }
-        });
-
-        if (!rowFound) {
-          console.warn(`Row for "${label}" not found in table. Make sure the table structure is correct.`);
-        }
-      });
-    }
-
-    function populateMedicationTable(selector, data) {
-      const table = document.querySelector(selector);
-      const rows = table.querySelectorAll('tbody tr');  // Get all rows
-
-      // Loop through each row and replace empty cells with the new data
-      let rowIndex = 0;
-      Object.entries(data).forEach(([key, value]) => {
-        if (rowIndex < rows.length) {
-          const tr = rows[rowIndex]; // Get the current row
-          const td = tr.querySelector('td');  // Get the first <td> in the row
-
-          // If the <td> is empty, replace it with the new data
-          if (td && td.textContent.trim() === "") {
-            td.textContent = value;
-          } else {
-            // If the <td> already has data, create a new <td> and append it to the row
-            const newTd = document.createElement('td');
-            newTd.textContent = value;
-            tr.appendChild(newTd);
-          }
-        }
-        rowIndex++; // Move to the next row
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Add click listeners to all collapsible headers
-      document.querySelectorAll(".collapsible-header").forEach((header) => {
-        header.addEventListener("click", () => {
-          const content = header.nextElementSibling;
-          const isOpen = content.classList.contains("open");
-          header.classList.toggle("collapsed", isOpen);
-          content.classList.toggle("open", !isOpen);
-        });
-      });
-    });
-
-    function openCollapsible(selector) {
-      const container = document.querySelector(selector);
-      const header = container.previousElementSibling;
-      const isOpen = container.classList.contains("open");
-
-      if (!isOpen) {
-        header.classList.remove("collapsed");
-        container.classList.add("open");
-        setTimeout(() => {
-          container.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 200);
-      }
-    }
-
-    function closeOtherCollapsibles(excludeSelector) {
-      document.querySelectorAll(".collapsible-content").forEach((content) => {
-        if (!content.matches(excludeSelector)) {
-          content.classList.remove("open");
-          content.previousElementSibling.classList.add("collapsed");
-        }
-      });
-    }
-
-
+    
   </script>
 </head>
 
